@@ -5,30 +5,18 @@
  * @format
  */
 
-import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
-import {TextInput} from 'react-native-gesture-handler';
-import AuthHomeScreen from './src/screens/AuthHomeScreen';
-import AuthStackNavigator from './src/screens/navigation/AuthStackNavigator';
+
+import RootNavigator from './src/screens/navigations/root/RootNavigator';
 
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
-      <AuthStackNavigator />
+      <RootNavigator />
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  container: {},
-  inputContainer: {},
-  input: {},
-});
 
 export default App;
