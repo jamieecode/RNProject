@@ -1,14 +1,16 @@
 import React, {useRef} from 'react';
 import {View, SafeAreaView, StyleSheet} from 'react-native';
-import InputField from '../../components/InputField';
-import useForm from '../../hooks/useForm';
-import CustomButton from '../../components/CustomButton';
-import {validateSignUp} from '../../utils';
+import InputField from '@/components/InputField';
+import useForm from '@/hooks/useForm';
+import CustomButton from '@/components/CustomButton';
+import {validateSignUp} from '@/utils';
 import {TextInput} from 'react-native-gesture-handler';
+import useAuth from '@/hooks/queries/useAuth';
 
 function SignUpScreen() {
   const passwordRef = useRef<TextInput | null>(null);
   const passwordConfirmRef = useRef<TextInput | null>(null);
+  const {signUpMutation, loginMutation} = useAuth();
 
   const signUp = useForm({
     initialValue: {
@@ -20,7 +22,18 @@ function SignUpScreen() {
   });
 
   const handleSubmit = () => {
+    const {email, password} = signUp.values;
     console.log(signUp.values);
+
+    signUpMutation.mutate(
+      {email, password},
+      {
+        onSuccess: () => {
+          loginMutation.mutate({email, password});
+          console.log('됨됨됨');
+        },
+      },
+    );
   };
 
   return (
