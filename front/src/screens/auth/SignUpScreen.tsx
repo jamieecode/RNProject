@@ -30,7 +30,6 @@ function SignUpScreen() {
       {
         onSuccess: () => {
           loginMutation.mutate({email, password});
-          console.log('됨됨됨');
         },
       },
     );

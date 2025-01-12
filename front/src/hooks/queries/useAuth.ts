@@ -58,7 +58,7 @@ function useGetRefreshToken() {
       setHeader('Authorization', `Bearer ${data.accessToken}`);
       setEncryptStorage(storageKeys.REFRESH_TOKEN, data.refreshToken);
     }
-  }, [isSuccess]);
+  }, [isSuccess, data?.accessToken, data?.refreshToken]);
 
   useEffect(() => {
     if (isError) {
