@@ -9,6 +9,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useUserLocation from '@/hooks/useUserLocation';
+import usePermission from '@/hooks/usePermission';
+import useAuth from '@/hooks/queries/useAuth';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -23,6 +25,8 @@ function MapHomeScreen() {
 
   const {userLocation, isUserLocationError} = useUserLocation();
 
+  usePermission('LOCATION');
+
   const handlePressUserLocation = () => {
     if (isUserLocationError) {
       return;
@@ -34,6 +38,12 @@ function MapHomeScreen() {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
+  };
+
+  const {logoutMutation} = useAuth();
+
+  const handleLogout = () => {
+    logoutMutation.mutate(null);
   };
 
   return (
@@ -56,6 +66,12 @@ function MapHomeScreen() {
           <Text>내위치</Text>
         </Pressable>
       </View>
+
+      <Pressable>
+        <View>
+          <Text onPress={handleLogout}>버튼</Text>
+        </View>
+      </Pressable>
     </>
   );
 }
