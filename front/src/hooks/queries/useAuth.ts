@@ -102,7 +102,13 @@ function useAuth() {
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
 
-  return {signUpMutation, getProfile, isLogin, loginMutation, logoutMutation};
+  return {
+    signUpMutation,
+    getProfileQuery,
+    isLogin,
+    loginMutation,
+    logoutMutation,
+  };
 }
 
 export default useAuth;
