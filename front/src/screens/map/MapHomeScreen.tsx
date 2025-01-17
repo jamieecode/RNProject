@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {colors} from '@/constants';
+import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import {alerts, colors, mapNavigations} from '@/constants';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -16,7 +16,6 @@ import MapView, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useUserLocation from '@/hooks/useUserLocation';
 import usePermission from '@/hooks/usePermission';
-import useAuth from '@/hooks/queries/useAuth';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
 import mapStyle from '@/style/mapStyle';
@@ -28,7 +27,7 @@ type Navigation = CompositeNavigationProp<
 >;
 
 function MapHomeScreen() {
-  const [selectLocation, setSelectLocation] = useState<LatLng>();
+  const [selectLocation, setSelectLocation] = useState<LatLng | null>();
   const mapRef = useRef<MapView | null>(null);
 
   const inset = useSafeAreaInsets();
@@ -51,14 +50,23 @@ function MapHomeScreen() {
     });
   };
 
-  const {logoutMutation} = useAuth();
-
-  const handleLogout = () => {
-    logoutMutation.mutate(null);
-  };
-
   const handleLongPressMapView = ({nativeEvent}: LongPressEvent) => {
     setSelectLocation(nativeEvent.coordinate);
+  };
+
+  const handlePressAddPost = () => {
+    if (!selectLocation) {
+      return Alert.alert(
+        alerts.NOT_SELECTED_LOCATION.TITLE,
+        alerts.NOT_SELECTED_LOCATION.DESCRIPTION,
+      );
+    }
+
+    navigation.navigate(mapNavigations.ADD_POST, {
+      location: selectLocation,
+    });
+
+    setSelectLocation(null);
   };
 
   return (
@@ -96,12 +104,22 @@ function MapHomeScreen() {
           </Callout>
         )}
       </MapView>
+
       <Pressable
         style={[styles.drawerButton, {top: inset.top || 20}]}
         onPress={() => navigation.openDrawer()}>
         <Ionicons name="menu" color={colors.WHITE} size={25} />
       </Pressable>
       <View style={styles.buttonList}>
+        <Pressable style={styles.mapButton} onPress={handlePressAddPost}>
+          <MaterialIcons
+            name="add"
+            color={colors.WHITE}
+            size={25}
+            style={{position: 'absolute', top: 10}}
+          />
+        </Pressable>
+
         <Pressable style={styles.mapButton} onPress={handlePressUserLocation}>
           <MaterialIcons
             name="my-location"
@@ -111,12 +129,6 @@ function MapHomeScreen() {
           />
         </Pressable>
       </View>
-
-      <Pressable>
-        <View>
-          <Text onPress={handleLogout}>버튼</Text>
-        </View>
-      </Pressable>
     </>
   );
 }
