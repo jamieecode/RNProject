@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import {alerts, colors, mapNavigations} from '@/constants';
 import {MainDrawerParamList} from '@/navigations/drawer/MainDrawerNavigator';
 import {MapStackParamList} from '@/navigations/stack/MapStackNavigator';
@@ -20,6 +20,7 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
 import mapStyle from '@/style/mapStyle';
 import CustomMarker from '@/components/CustomMarker';
+import useGetMarkers from '@/hooks/queries/useGetMarkers';
 
 type Navigation = CompositeNavigationProp<
   StackNavigationProp<MapStackParamList>,
@@ -32,6 +33,8 @@ function MapHomeScreen() {
 
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<Navigation>();
+
+  const {data: markers = []} = useGetMarkers();
 
   const {userLocation, isUserLocationError} = useUserLocation();
 
@@ -80,23 +83,14 @@ function MapHomeScreen() {
         showsMyLocationButton={false}
         customMapStyle={mapStyle}
         onLongPress={handleLongPressMapView}>
-        <CustomMarker
-          coordinate={{
-            latitude: 37.5516032365118,
-            longitude: 126.98989626020192,
-          }}
-          color="RED"
-          score={5}
-        />
-
-        <CustomMarker
-          coordinate={{
-            latitude: 37.5616032365118,
-            longitude: 126.98989626020192,
-          }}
-          color="PURPLE"
-          score={3}
-        />
+        {markers.map(({id, color, score, ...coordinate}) => (
+          <CustomMarker
+            key={id}
+            color={color}
+            score={score}
+            coordinate={coordinate}
+          />
+        ))}
 
         {selectLocation && (
           <Callout>

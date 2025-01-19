@@ -7,7 +7,7 @@ import {
   postLogin,
   postSignUp,
 } from '@/api/auth';
-import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types/common';
+import {UseMutationCustomOptions, UseQueryCustomOptions} from '@/types';
 import {
   removeEncryptStorage,
   setEncryptStorage,

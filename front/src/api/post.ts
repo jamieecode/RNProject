@@ -1,5 +1,5 @@
 import axiosInstance from './axios';
-import {ImageUri, Post} from '@/types/domain';
+import {ImageUri, Post} from '@/types';
 
 type RequestCreatePost = Omit<Post, 'id'> & {imageUris: ImageUri[]};
 type ResponsePost = Post & {images: ImageUri[]};
