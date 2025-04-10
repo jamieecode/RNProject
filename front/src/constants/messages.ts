@@ -1,3 +1,7 @@
+const errorMessages = {
+  CANNOT_GET_ADDRESS: '주소를 알 수 없습니다.',
+} as const;
+
 const alerts = {
   LOCATION_PERMISSION: {
     TITLE: '위치 권한 허용이 필요합니다.',
@@ -14,4 +18,4 @@ const alerts = {
   },
 } as const;
 
-export {alerts};
+export {alerts, errorMessages};
