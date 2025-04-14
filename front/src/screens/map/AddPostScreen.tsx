@@ -22,6 +22,10 @@ import MarkerSelector from '@/components/MarkerSelector';
 import ScoreInput from '@/components/ScoreInput';
 import DatePickerOption from '@/components/DatePickerOption';
 import useModal from '@/hooks/useModal';
+import usePermission from '@/hooks/usePermission';
+import ImageInput from '@/components/ImageInput';
+import PreviewImageList from '@/components/PreviewImageList';
+import useImagePicker from '@/hooks/useImagePicker';
 
 type AddPostScreenProps = StackScreenProps<
   MapStackParamList,
@@ -29,10 +33,14 @@ type AddPostScreenProps = StackScreenProps<
 >;
 
 function AddPostScreen({route, navigation}: AddPostScreenProps) {
+  usePermission('PHOTO');
   const [markerColor, setMarkerColor] = useState<MarkerColor>('RED');
   const [score, setScore] = useState(5);
   const [date, setDate] = useState(new Date());
   const [isPicked, setIsPicked] = useState(false);
+  const imagePicker = useImagePicker({
+    initialImages: [],
+  });
 
   const {location} = route.params;
   const address = useGetAddress(location);
@@ -100,14 +108,12 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
               <Octicons name="location" size={16} color={colors.GRAY_500} />
             }
           />
-
           <CustomButton
             variant="outlined"
             size="large"
             label={isPicked ? getDateWithSeparator(date, '. ') : '날짜 선택'}
             onPress={dateOption.show}
           />
-
           <InputField
             placeholder="제목을 입력하세요"
             error={addPost.errors.title}
@@ -131,6 +137,14 @@ function AddPostScreen({route, navigation}: AddPostScreenProps) {
             onPressMarker={handleSelectMarker}
           />
           <ScoreInput score={score} onChangeScore={handleChangeScore} />
+          <View style={styles.imagesViewer}>
+            <ImageInput onChange={imagePicker.handleChange} />
+            <PreviewImageList
+              imageUris={imagePicker.imageUris}
+              onDelete={imagePicker.delete}
+              onChangeOrder={imagePicker.changeOrder}
+            />
+          </View>
           <DatePickerOption
             date={date}
             isVisible={dateOption.isVisible}
@@ -155,6 +169,9 @@ const styles = StyleSheet.create({
   inputContainer: {
     gap: 20,
     marginBottom: 20,
+  },
+  imagesViewer: {
+    flexDirection: 'row',
   },
 });
 
