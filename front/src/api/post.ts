@@ -10,6 +10,14 @@ const createPost = async (body: RequestCreatePost): Promise<ResponsePost> => {
   return data;
 };
 
-export {createPost};
+type ResponseSinglePost = ResponsePost & {isFavorite: boolean};
 
-export type {RequestCreatePost, ResponsePost};
+const getPost = async (id: number): Promise<ResponseSinglePost> => {
+  const {data} = await axiosInstance.get(`/posts/${id}`);
+
+  return data;
+};
+
+export {createPost, getPost};
+
+export type {RequestCreatePost, ResponsePost, ResponseSinglePost};
